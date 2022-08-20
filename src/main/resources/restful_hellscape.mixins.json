@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "moe.inx.restful_hellscape.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": ["BedBlockMixin"],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
