@@ -18,31 +18,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BedBlock.class)
 public abstract class BedBlockMixin {
+    @Shadow
+    public abstract boolean wakeVillager(World world, BlockPos pos);
 
-  @Shadow public abstract boolean wakeVillager(World world, BlockPos pos);
-  @Shadow public static BooleanProperty OCCUPIED;
+    @Shadow
+    public static BooleanProperty OCCUPIED;
 
-  @Inject(
-      method = "onUse",
-      at = @At(
-          value = "INVOKE",
-          target =
-              "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z")
-      ,
-      cancellable = true)
-  public void
-  restfulhellscape$onUse(BlockState state, World world, BlockPos pos,
-                         PlayerEntity player, Hand hand, BlockHitResult hit,
-                         CallbackInfoReturnable<ActionResult> ci) {
-    if (state.get(OCCUPIED)) {
-      if (!wakeVillager(world, pos)) {
-        player.sendMessage(Text.translatable("block.minecraft.bed.occupied"),
-                           true);
-      }
-      ci.setReturnValue(ActionResult.SUCCESS);
-    } else {
-      player.sleep(pos);
-      ci.setReturnValue(ActionResult.SUCCESS);
+    @Inject(method = "onUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"), cancellable = true)
+    public void restfulhellscape$onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit, CallbackInfoReturnable<ActionResult> ci) {
+        if (state.get(OCCUPIED)) {
+            if (!wakeVillager(world, pos)) {
+                player.sendMessage(Text.translatable("block.minecraft.bed.occupied"), true);
+            }
+            ci.setReturnValue(ActionResult.SUCCESS);
+        } else {
+            player.sleep(pos);
+            ci.setReturnValue(ActionResult.SUCCESS);
+        }
     }
-  }
 }
